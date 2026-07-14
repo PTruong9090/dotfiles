@@ -2,4 +2,4 @@
 set -euo pipefail
 DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd -P)"
 ln -sfn "$DIR" ~/.dotfiles
-exec home-manager switch --flake ~/.dotfiles#ptruong9090
+exec home-manager switch -b backup --flake "$HOME/.dotfiles#ptruong9090"

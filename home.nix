@@ -1,4 +1,4 @@
-{ config, pkgs, user, ... }:
+{ config, pkgs, user, inputs, ... }:
 
 let
   dotfiles = "${config.home.homeDirectory}/github/dotfiles";
@@ -14,6 +14,7 @@ in
 
   home.packages = with pkgs; [
     git
+    inputs.herdr.packages.${pkgs.system}.default
     neovim
     starship
     ripgrep
@@ -24,6 +25,7 @@ in
     nodejs
     python3
     jq
+    nerd-fonts.hack
   ];
   
   programs.zsh = {
@@ -44,6 +46,15 @@ in
     };
   };
 
+  programs.bash = {
+  enable = true;
+
+  initExtra = ''
+    if [[ $- == *i* ]] && [[ -z "$ZSH_VERSION" ]]; then
+      exec "${config.home.profileDirectory}/bin/zsh"
+    fi
+  '';
+};
 
   programs.git = {
     enable = true;
@@ -66,6 +77,11 @@ in
     };
   };
 
+  home.sessionPath = [
+  "$HOME/.local/bin"
+  "$HOME/.codex/packages/standalone/releases/0.144.3-x86_64-unknown-linux-musl/bin"
+  ];
+
   home.file.".config/nvim".source =
     config.lib.file.mkOutOfStoreSymlink
       "${dotfiles}/home/.config/nvim";
@@ -73,10 +89,6 @@ in
   home.file.".config/herdr".source =
     config.lib.file.mkOutOfStoreSymlink
       "${dotfiles}/home/.config/herdr";
-
-  home.file.".claude/settings.json".source =
-    config.lib.file.mkOutOfStoreSymlink
-      "${dotfiles}/home/.claude/settings.json";
 
   home.file.".claude/CLAUDE.md".source =
     config.lib.file.mkOutOfStoreSymlink
