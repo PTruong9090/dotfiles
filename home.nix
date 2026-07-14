@@ -34,6 +34,7 @@ in
     syntaxHighlighting.enable = true;  # commands turn green when valid
     initContent = ''
       bindkey '^f' autosuggest-accept
+      export PATH="$HOME/.local/bin:$PATH"
     '';
     shellAliases = {
       ".." = "cd ..";
